@@ -1,3 +1,6 @@
+/* Quick-draw tools register before app.js builds the command palette. */
+import "./tools/quickdraw.js";
+
 /* ═══ شاشة الإقلاع ═══
    لا تُقرّر بنفسها متى «اكتمل» الإقلاع — تصغي فقط لحدثٍ يُطلقه
    bootOk() الحقيقي في bootguard.js (انظر التعديل هناك)، وهو نفس
@@ -6,13 +9,13 @@
 
    ومهلة الأمان أدناه (١٠ث) لا «تنجح» الإقلاع ولا تُخفي الشعار:
    الإخفاءُ هو ما يُنتج الشاشةَ البيضاء الصامتة، وهي أخطر حالةٍ في
-   برنامجٍ يحمل عمل المستخدم. بدلاً من ذلك تُحوِّل الشعارَ إلى
+   برنامجٍ يحمل عمل المستخدم. بدلاً من ذلك تُحوّل الشعارَ إلى
    شاشة فشلٍ صريحة، وتُنزله تحت صندوق #bootErr (bootguard.js) كي
    تُقرأ رسالةُ السبب فوقه. وإن وصل bootOk متأخّراً فالمستمعُ نفسه
    يُخفي الشعار كالمعتاد. */
 
-const SAFETY_MS = 10000;   // يطابق مهلة مرقب bootguard.js نفسها
-const SLOW_MS   = 45000;   // سقفٌ أقصى لشبكةٍ بطيئة ما زالت تُنزِّل الوحدات
+const SAFETY_MS = 10000;
+const SLOW_MS   = 45000;
 let hidden = false;
 
 function hideSplash(){
@@ -24,16 +27,9 @@ function hideSplash(){
  el.setAttribute("aria-hidden", "true");
  const remove = () => el.remove();
  el.addEventListener("transitionend", remove, {once:true});
- /* شبكة أمان: لو لم يُطلَق transitionend (مثلاً prefers-reduced-motion
-    يلغي الانتقال) احذف العنصر يدوياً بعد مهلة الانتقال القصوى */
  setTimeout(remove, 450);
 }
 
-/* ═══ فشل الإقلاع ═══
-   الشعارُ يبقى، لكنّ سطر التحميل يصير «تعذّر الإقلاع» والشريط
-   المتحرّك يتوقّف — فلا يوحي بأنّ شيئاً ما زال يعمل.
-   وz-index الشعار (99999) أعلى من #bootErr (9999) فيحجبه؛ فيُنزَل
-   هنا إلى ما دونه، وإلا أحالت الرسالةُ القارئَ إلى نصٍّ لا يراه. */
 function showBootFail(){
  if(hidden)return;
  const el = document.getElementById("splash");
@@ -53,12 +49,7 @@ function showBootFail(){
  if(mark)mark.style.animation = "none";
 }
 
-/* النداء الحقيقي الوحيد لإخفاء الشاشة */
 addEventListener("civildraft:bootok", hideSplash, {once:true});
-
-/* شبكة أمان: تُظهر الفشل، ولا تعني نجاح الإقلاع ولا تُخفي شيئاً */
-/* بطءُ الشبكة ليس فشلاً: ما دامت الصفحة تُنزِّل وحداتها (readyState لم يبلغ
-   complete) نمدّد المهلة إلى SLOW_MS، وبعدها فقط نعلن الفشل. */
 const t0 = Date.now();
 function safety(){
  const loading = typeof document !== "undefined"
