@@ -1,5 +1,6 @@
-import {defTool,H,ov,ovLen,rec} from './registry.js';
+import {defTool,H,ov,ovLen,rec,pvRect} from './registry.js';
 import {commitQuickRoom} from '../core/quick-room.js';
+import {previewQuickRectangle} from '../core/quick-preview.js';
 
 defTool({
  id:'quickroom',alias:'qroom غرفة_سريعة',label:'غرفة سريعة',
@@ -16,5 +17,10 @@ defTool({
    result.walls.forEach(w=>rec(ctx,w,'walls'));
    rec(ctx,result.room,'areas');
    H.rep('ok',`غرفة سريعة · ${result.walls.length} جدران · ${result.room.name||'بلا اسم'}`);
-  }}]
-});
+  }}],
+ prev(ctx,g){
+  if(!ctx.pts.length||!g)return [];
+  const p=previewQuickRectangle(ctx.pts[0],g);
+  return [pvRect(ctx.pts[0],g,'#5cd98e')];
+ }}
+);
