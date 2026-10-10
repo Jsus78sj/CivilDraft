@@ -1,5 +1,6 @@
 /* Quick-draw tools register before app.js builds the command palette. */
 import "./tools/quickdraw.js";
+import "./tools/quickwall.js";
 
 /* ═══ شاشة الإقلاع ═══
    لا تُقرّر بنفسها متى «اكتمل» الإقلاع — تصغي فقط لحدثٍ يُطلقه
