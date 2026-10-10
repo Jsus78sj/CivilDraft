@@ -1,0 +1,16 @@
+const finite=v=>typeof v==='number'&&Number.isFinite(v);
+export function normalizeDimension(value){
+ const raw=String(value??'').trim().replace('٫','.').replace('،',',');
+ if(!raw)throw new TypeError('المقاس فارغ');
+ const m=/^([+-]?(?:\d+(?:\.\d*)?|\.\d+))\s*(mm|cm|m|م|سم|ملم)?$/i.exec(raw);
+ if(!m)throw new TypeError('المقاس غير صالح');
+ const n=Number(m[1]),unit=(m[2]||'mm').toLowerCase();
+ if(!finite(n)||n<=0)throw new RangeError('المقاس يجب أن يكون موجباً');
+ const factor={mm:1,ملم:1,cm:10,سم:10,m:1000,م:1000}[unit];
+ if(!factor)throw new TypeError('وحدة غير معروفة');
+ return n*factor;
+}
+export function dimensionPreview(start,end){
+ const dx=end[0]-start[0],dy=end[1]-start[1];
+ return {length:Math.hypot(dx,dy),angle:Math.atan2(dy,dx)*180/Math.PI};
+}
