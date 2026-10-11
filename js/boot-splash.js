@@ -3,6 +3,7 @@ import "./tools/quickdraw.js";
 import "./tools/quickwall.js";
 import "./tools/quickopening.js";
 import "./tools/quickroom.js";
+import "./tools/guidedroom.js";
 
 /* ═══ شاشة الإقلاع ═══
    لا تُقرّر بنفسها متى «اكتمل» الإقلاع — تصغي فقط لحدثٍ يُطلقه
